@@ -36,8 +36,7 @@ namespace IO.Swagger.v2.Modules
                 var body = this.Bind<Pet>();
                 Preconditions.IsNotNull(body, "Required parameter: 'body' is missing at 'AddPet'");
                 
-                service.AddPet(Context, body);
-                return new Response { ContentType = "application/xml"};
+                return service.AddPet(Context, body);
             };
 
             Delete["/pet/{petId}"] = parameters =>
@@ -46,8 +45,7 @@ namespace IO.Swagger.v2.Modules
                 var apiKey = Parameters.ValueOf<string>(parameters, Context.Request, "apiKey", ParameterType.Header);
                 Preconditions.IsNotNull(petId, "Required parameter: 'petId' is missing at 'DeletePet'");
                 
-                service.DeletePet(Context, petId, apiKey);
-                return new Response { ContentType = "application/xml"};
+                return service.DeletePet(Context, petId, apiKey);
             };
 
             Get["/pet/findByStatus"] = parameters =>
@@ -79,8 +77,7 @@ namespace IO.Swagger.v2.Modules
                 var body = this.Bind<Pet>();
                 Preconditions.IsNotNull(body, "Required parameter: 'body' is missing at 'UpdatePet'");
                 
-                service.UpdatePet(Context, body);
-                return new Response { ContentType = "application/xml"};
+                return service.UpdatePet(Context, body);
             };
 
             Post["/pet/{petId}"] = parameters =>
@@ -90,8 +87,7 @@ namespace IO.Swagger.v2.Modules
                 var status = Parameters.ValueOf<string>(parameters, Context.Request, "status", ParameterType.Undefined);
                 Preconditions.IsNotNull(petId, "Required parameter: 'petId' is missing at 'UpdatePetWithForm'");
                 
-                service.UpdatePetWithForm(Context, petId, name, status);
-                return new Response { ContentType = "application/xml"};
+                return service.UpdatePetWithForm(Context, petId, name, status);
             };
 
             Post["/pet/{petId}/uploadImage"] = parameters =>
@@ -117,7 +113,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="context">Context of request</param>
         /// <param name="body">Pet object that needs to be added to the store</param>
         /// <returns></returns>
-        void AddPet(NancyContext context, Pet body);
+        dynamic AddPet(NancyContext context, Pet body);
 
         /// <summary>
         /// 
@@ -126,7 +122,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="petId">Pet id to delete</param>
         /// <param name="apiKey"> (optional)</param>
         /// <returns></returns>
-        void DeletePet(NancyContext context, long? petId, string apiKey);
+        dynamic DeletePet(NancyContext context, long? petId, string apiKey);
 
         /// <summary>
         /// Multiple status values can be provided with comma separated strings
@@ -134,15 +130,15 @@ namespace IO.Swagger.v2.Modules
         /// <param name="context">Context of request</param>
         /// <param name="status">Status values that need to be considered for filter</param>
         /// <returns>List&lt;Pet&gt;</returns>
-        List<Pet> FindPetsByStatus(NancyContext context, FindPetsByStatusStatusEnum? status);
+        dynamic FindPetsByStatus(NancyContext context, FindPetsByStatusStatusEnum? status);
 
         /// <summary>
-        /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+        /// Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="tags">Tags to filter by</param>
         /// <returns>List&lt;Pet&gt;</returns>
-        List<Pet> FindPetsByTags(NancyContext context, List<string> tags);
+        dynamic FindPetsByTags(NancyContext context, List<string> tags);
 
         /// <summary>
         /// Returns a single pet
@@ -150,7 +146,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="context">Context of request</param>
         /// <param name="petId">ID of pet to return</param>
         /// <returns>Pet</returns>
-        Pet GetPetById(NancyContext context, long? petId);
+        dynamic GetPetById(NancyContext context, long? petId);
 
         /// <summary>
         /// 
@@ -158,7 +154,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="context">Context of request</param>
         /// <param name="body">Pet object that needs to be added to the store</param>
         /// <returns></returns>
-        void UpdatePet(NancyContext context, Pet body);
+        dynamic UpdatePet(NancyContext context, Pet body);
 
         /// <summary>
         /// 
@@ -168,7 +164,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="name">Updated name of the pet (optional)</param>
         /// <param name="status">Updated status of the pet (optional)</param>
         /// <returns></returns>
-        void UpdatePetWithForm(NancyContext context, long? petId, string name, string status);
+        dynamic UpdatePetWithForm(NancyContext context, long? petId, string name, string status);
 
         /// <summary>
         /// 
@@ -178,7 +174,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="additionalMetadata">Additional data to pass to server (optional)</param>
         /// <param name="file">file to upload (optional)</param>
         /// <returns>ApiResponse</returns>
-        ApiResponse UploadFile(NancyContext context, long? petId, string additionalMetadata, System.IO.Stream file);
+        dynamic UploadFile(NancyContext context, long? petId, string additionalMetadata, System.IO.Stream file);
     }
 
     /// <summary>
@@ -186,61 +182,61 @@ namespace IO.Swagger.v2.Modules
     /// </summary>
     public abstract class AbstractPetService: PetService
     {
-        public virtual void AddPet(NancyContext context, Pet body)
+        public virtual dynamic AddPet(NancyContext context, Pet body)
         {
-            AddPet(body);
+            return AddPet(body);
         }
 
-        public virtual void DeletePet(NancyContext context, long? petId, string apiKey)
+        public virtual dynamic DeletePet(NancyContext context, long? petId, string apiKey)
         {
-            DeletePet(petId, apiKey);
+            return DeletePet(petId, apiKey);
         }
 
-        public virtual List<Pet> FindPetsByStatus(NancyContext context, FindPetsByStatusStatusEnum? status)
+        public virtual dynamic FindPetsByStatus(NancyContext context, FindPetsByStatusStatusEnum? status)
         {
             return FindPetsByStatus(status);
         }
 
-        public virtual List<Pet> FindPetsByTags(NancyContext context, List<string> tags)
+        public virtual dynamic FindPetsByTags(NancyContext context, List<string> tags)
         {
             return FindPetsByTags(tags);
         }
 
-        public virtual Pet GetPetById(NancyContext context, long? petId)
+        public virtual dynamic GetPetById(NancyContext context, long? petId)
         {
             return GetPetById(petId);
         }
 
-        public virtual void UpdatePet(NancyContext context, Pet body)
+        public virtual dynamic UpdatePet(NancyContext context, Pet body)
         {
-            UpdatePet(body);
+            return UpdatePet(body);
         }
 
-        public virtual void UpdatePetWithForm(NancyContext context, long? petId, string name, string status)
+        public virtual dynamic UpdatePetWithForm(NancyContext context, long? petId, string name, string status)
         {
-            UpdatePetWithForm(petId, name, status);
+            return UpdatePetWithForm(petId, name, status);
         }
 
-        public virtual ApiResponse UploadFile(NancyContext context, long? petId, string additionalMetadata, System.IO.Stream file)
+        public virtual dynamic UploadFile(NancyContext context, long? petId, string additionalMetadata, System.IO.Stream file)
         {
             return UploadFile(petId, additionalMetadata, file);
         }
 
-        protected abstract void AddPet(Pet body);
+        protected abstract dynamic AddPet(Pet body);
 
-        protected abstract void DeletePet(long? petId, string apiKey);
+        protected abstract dynamic DeletePet(long? petId, string apiKey);
 
-        protected abstract List<Pet> FindPetsByStatus(FindPetsByStatusStatusEnum? status);
+        protected abstract dynamic FindPetsByStatus(FindPetsByStatusStatusEnum? status);
 
-        protected abstract List<Pet> FindPetsByTags(List<string> tags);
+        protected abstract dynamic FindPetsByTags(List<string> tags);
 
-        protected abstract Pet GetPetById(long? petId);
+        protected abstract dynamic GetPetById(long? petId);
 
-        protected abstract void UpdatePet(Pet body);
+        protected abstract dynamic UpdatePet(Pet body);
 
-        protected abstract void UpdatePetWithForm(long? petId, string name, string status);
+        protected abstract dynamic UpdatePetWithForm(long? petId, string name, string status);
 
-        protected abstract ApiResponse UploadFile(long? petId, string additionalMetadata, System.IO.Stream file);
+        protected abstract dynamic UploadFile(long? petId, string additionalMetadata, System.IO.Stream file);
     }
 
 }

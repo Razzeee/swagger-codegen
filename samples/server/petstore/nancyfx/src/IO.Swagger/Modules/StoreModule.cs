@@ -23,11 +23,10 @@ namespace IO.Swagger.v2.Modules
         { 
             Delete["/store/order/{orderId}"] = parameters =>
             {
-                var orderId = Parameters.ValueOf<string>(parameters, Context.Request, "orderId", ParameterType.Path);
+                var orderId = Parameters.ValueOf<long?>(parameters, Context.Request, "orderId", ParameterType.Path);
                 Preconditions.IsNotNull(orderId, "Required parameter: 'orderId' is missing at 'DeleteOrder'");
                 
-                service.DeleteOrder(Context, orderId);
-                return new Response { ContentType = "application/xml"};
+                return service.DeleteOrder(Context, orderId);
             };
 
             Get["/store/inventory"] = parameters =>
@@ -60,27 +59,27 @@ namespace IO.Swagger.v2.Modules
     public interface StoreService
     {
         /// <summary>
-        /// For valid response try integer IDs with value &lt; 1000. Anything above 1000 or nonintegers will generate API errors
+        /// For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="orderId">ID of the order that needs to be deleted</param>
         /// <returns></returns>
-        void DeleteOrder(NancyContext context, string orderId);
+        dynamic DeleteOrder(NancyContext context, long? orderId);
 
         /// <summary>
         /// Returns a map of status codes to quantities
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <returns>Dictionary&lt;string, int?&gt;</returns>
-        Dictionary<string, int?> GetInventory(NancyContext context);
+        dynamic GetInventory(NancyContext context);
 
         /// <summary>
-        /// For valid response try integer IDs with value &lt;&#x3D; 5 or &gt; 10. Other values will generated exceptions
+        /// For valid response try integer IDs with value &gt;&#x3D; 1 and &lt;&#x3D; 10. Other values will generated exceptions
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="orderId">ID of pet that needs to be fetched</param>
         /// <returns>Order</returns>
-        Order GetOrderById(NancyContext context, long? orderId);
+        dynamic GetOrderById(NancyContext context, long? orderId);
 
         /// <summary>
         /// 
@@ -88,7 +87,7 @@ namespace IO.Swagger.v2.Modules
         /// <param name="context">Context of request</param>
         /// <param name="body">order placed for purchasing the pet</param>
         /// <returns>Order</returns>
-        Order PlaceOrder(NancyContext context, Order body);
+        dynamic PlaceOrder(NancyContext context, Order body);
     }
 
     /// <summary>
@@ -96,33 +95,33 @@ namespace IO.Swagger.v2.Modules
     /// </summary>
     public abstract class AbstractStoreService: StoreService
     {
-        public virtual void DeleteOrder(NancyContext context, string orderId)
+        public virtual dynamic DeleteOrder(NancyContext context, long? orderId)
         {
-            DeleteOrder(orderId);
+            return DeleteOrder(orderId);
         }
 
-        public virtual Dictionary<string, int?> GetInventory(NancyContext context)
+        public virtual dynamic GetInventory(NancyContext context)
         {
             return GetInventory();
         }
 
-        public virtual Order GetOrderById(NancyContext context, long? orderId)
+        public virtual dynamic GetOrderById(NancyContext context, long? orderId)
         {
             return GetOrderById(orderId);
         }
 
-        public virtual Order PlaceOrder(NancyContext context, Order body)
+        public virtual dynamic PlaceOrder(NancyContext context, Order body)
         {
             return PlaceOrder(body);
         }
 
-        protected abstract void DeleteOrder(string orderId);
+        protected abstract dynamic DeleteOrder(long? orderId);
 
-        protected abstract Dictionary<string, int?> GetInventory();
+        protected abstract dynamic GetInventory();
 
-        protected abstract Order GetOrderById(long? orderId);
+        protected abstract dynamic GetOrderById(long? orderId);
 
-        protected abstract Order PlaceOrder(Order body);
+        protected abstract dynamic PlaceOrder(Order body);
     }
 
 }
