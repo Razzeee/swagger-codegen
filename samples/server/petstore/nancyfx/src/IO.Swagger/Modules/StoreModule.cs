@@ -19,11 +19,11 @@ namespace IO.Swagger.v2.Modules
         /// Sets up HTTP methods mappings.
         /// </summary>
         /// <param name="service">Service handling requests</param>
-        public StoreModule(StoreService service) : base("/v2")
+        public StoreModule(IStoreService service) : base("/v2")
         { 
             Delete["/store/order/{orderId}"] = parameters =>
             {
-                var orderId = Parameters.ValueOf<string>(parameters, Context.Request, "orderId", ParameterType.Path);
+                var orderId = Parameters.ValueOf<long?>(parameters, Context.Request, "orderId", ParameterType.Path);
                 Preconditions.IsNotNull(orderId, "Required parameter: 'orderId' is missing at 'DeleteOrder'");
                 
                 service.DeleteOrder(Context, orderId);
@@ -57,15 +57,15 @@ namespace IO.Swagger.v2.Modules
     /// <summary>
     /// Service handling Store requests.
     /// </summary>
-    public interface StoreService
+    public interface IStoreService
     {
         /// <summary>
-        /// For valid response try integer IDs with value &lt; 1000. Anything above 1000 or nonintegers will generate API errors
+        /// For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="orderId">ID of the order that needs to be deleted</param>
         /// <returns></returns>
-        void DeleteOrder(NancyContext context, string orderId);
+        void DeleteOrder(NancyContext context, long? orderId);
 
         /// <summary>
         /// Returns a map of status codes to quantities
@@ -75,7 +75,7 @@ namespace IO.Swagger.v2.Modules
         Dictionary<string, int?> GetInventory(NancyContext context);
 
         /// <summary>
-        /// For valid response try integer IDs with value &lt;&#x3D; 5 or &gt; 10. Other values will generated exceptions
+        /// For valid response try integer IDs with value &gt;&#x3D; 1 and &lt;&#x3D; 10. Other values will generated exceptions
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="orderId">ID of pet that needs to be fetched</param>
@@ -92,11 +92,11 @@ namespace IO.Swagger.v2.Modules
     }
 
     /// <summary>
-    /// Abstraction of StoreService.
+    /// Abstraction of IStoreService.
     /// </summary>
-    public abstract class AbstractStoreService: StoreService
+    public abstract class AbstractStoreService: IStoreService
     {
-        public virtual void DeleteOrder(NancyContext context, string orderId)
+        public virtual void DeleteOrder(NancyContext context, long? orderId)
         {
             DeleteOrder(orderId);
         }
@@ -116,7 +116,7 @@ namespace IO.Swagger.v2.Modules
             return PlaceOrder(body);
         }
 
-        protected abstract void DeleteOrder(string orderId);
+        protected abstract void DeleteOrder(long? orderId);
 
         protected abstract Dictionary<string, int?> GetInventory();
 

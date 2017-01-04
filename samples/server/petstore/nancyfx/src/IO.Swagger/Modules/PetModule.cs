@@ -29,7 +29,7 @@ namespace IO.Swagger.v2.Modules
         /// Sets up HTTP methods mappings.
         /// </summary>
         /// <param name="service">Service handling requests</param>
-        public PetModule(PetService service) : base("/v2")
+        public PetModule(IPetService service) : base("/v2")
         { 
             Post["/pet"] = parameters =>
             {
@@ -109,7 +109,7 @@ namespace IO.Swagger.v2.Modules
     /// <summary>
     /// Service handling Pet requests.
     /// </summary>
-    public interface PetService
+    public interface IPetService
     {
         /// <summary>
         /// 
@@ -137,7 +137,7 @@ namespace IO.Swagger.v2.Modules
         List<Pet> FindPetsByStatus(NancyContext context, FindPetsByStatusStatusEnum? status);
 
         /// <summary>
-        /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+        /// Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="tags">Tags to filter by</param>
@@ -182,9 +182,9 @@ namespace IO.Swagger.v2.Modules
     }
 
     /// <summary>
-    /// Abstraction of PetService.
+    /// Abstraction of IPetService.
     /// </summary>
-    public abstract class AbstractPetService: PetService
+    public abstract class AbstractPetService: IPetService
     {
         public virtual void AddPet(NancyContext context, Pet body)
         {

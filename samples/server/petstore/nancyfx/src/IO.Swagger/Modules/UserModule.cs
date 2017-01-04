@@ -19,7 +19,7 @@ namespace IO.Swagger.v2.Modules
         /// Sets up HTTP methods mappings.
         /// </summary>
         /// <param name="service">Service handling requests</param>
-        public UserModule(UserService service) : base("/v2")
+        public UserModule(IUserService service) : base("/v2")
         { 
             Post["/user"] = parameters =>
             {
@@ -100,7 +100,7 @@ namespace IO.Swagger.v2.Modules
     /// <summary>
     /// Service handling User requests.
     /// </summary>
-    public interface UserService
+    public interface IUserService
     {
         /// <summary>
         /// This can only be done by the logged in user.
@@ -162,16 +162,16 @@ namespace IO.Swagger.v2.Modules
         /// This can only be done by the logged in user.
         /// </summary>
         /// <param name="context">Context of request</param>
-        /// <param name="username">name that need to be deleted</param>
+        /// <param name="username">name that need to be updated</param>
         /// <param name="body">Updated user object</param>
         /// <returns></returns>
         void UpdateUser(NancyContext context, string username, User body);
     }
 
     /// <summary>
-    /// Abstraction of UserService.
+    /// Abstraction of IUserService.
     /// </summary>
-    public abstract class AbstractUserService: UserService
+    public abstract class AbstractUserService: IUserService
     {
         public virtual void CreateUser(NancyContext context, User body)
         {
