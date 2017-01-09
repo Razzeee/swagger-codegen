@@ -137,7 +137,7 @@ namespace IO.Swagger.v2.Modules
         List<Pet> FindPetsByStatus(NancyContext context, FindPetsByStatusStatusEnum? status);
 
         /// <summary>
-        /// Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+        /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
         /// </summary>
         /// <param name="context">Context of request</param>
         /// <param name="tags">Tags to filter by</param>
